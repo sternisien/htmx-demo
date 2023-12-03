@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+</head>
+<body>
+
+<div id="formAndTable" th:fragment="form-and-user-list">
+    <form th:object="${userDto}" method="post" hx-post="/users/add" hx-target="#formAndTable" hx-swap="outerHtml">
+        <div>
+            <label for="nom">Nom</label>
+            <input th:field="*{nom}" id="nom" placeholder="Nom" value="">
+        </div>
+        <div>
+            <label for="prenom">Prénom</label>
+            <input th:field="*{prenom}" id="prenom" placeholder="Prénom" value="">
+        </div>
+        <button >Envoyer</button>
+    </form>
+
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>NOM</th>
+            <th>PRÉNOM</th>
+            <th>ACTION</th>
+        </tr>
+        </thead>
+        <tbody id="userTable" th:fragment="user-list">
+        <tr th:each="user : ${users}" th:id="'user-' + ${user.id}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.nom}"></td>
+            <td th:text="${user.prenom}"></td>
+            <td>
+                <button th:attr="hx-delete=@{/users/{id}(id=${user.id})}" hx-swap="outerHTML" hx-target="#userTable">DELETE</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+</body>
+</html>
