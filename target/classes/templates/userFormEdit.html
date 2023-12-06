@@ -1,0 +1,13 @@
+<form th:object="${userEdit}" xmlns:th="http://www.thymeleaf.org"
+      th:attr="hx-put=@{/users/{id}(id=${userEdit.id})} , hx-target=@{#user-{id}(id=${userEdit.id})}"
+      hx-swap="outerHTML">
+<div>
+        <label for="nom">Nom</label>
+        <input th:field="*{nom}" id="nom" placeholder="Nom">
+    </div>
+    <div>
+        <label for="nom">Nom</label>
+        <input th:field="*{prenom}" id="nom" placeholder="Nom">
+    </div>
+    <button    >MAJ</button>
+</form>

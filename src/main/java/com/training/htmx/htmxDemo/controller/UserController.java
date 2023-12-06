@@ -23,15 +23,17 @@ public class UserController {
     }
 
     @GetMapping
-    ModelAndView getUsers() {
-        List<User> myUser = userRepository.findAll();
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("users");
-        modelAndView.addObject("users", myUser);
-        modelAndView.addObject("userDto", new UserDto());
-        return modelAndView;
+    String getUsers(Model model) {
+        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("userDto", new UserDto());
+        return "users";
     }
 
+    @GetMapping("/{id}/edit")
+    String getUserEdit(@PathVariable long id, Model model){
+      model.addAttribute("userEdit",  userRepository.findById(id).orElseThrow());
+      return "userFormEdit";
+    }
 
     /**
      *
@@ -47,9 +49,31 @@ public class UserController {
         userRepository.saveAndFlush(user);
          model.addAttribute("users",userRepository.findAll());
          model.addAttribute("userDto", new UserDto());
-        //TODO : tester si il est possible de faire la meme chose avec le ModelAndView
         return "users :: form-and-user-list";
     }
+
+
+    /**
+     * Permet d'effectuer la maj d'un utilisateur.
+     * Fournit seulement l'utilisateur màj à la collection de d'utilisateur coté template html
+     * afin de générer le fragment html (row) pour cette utilisateur, c'est à dire la ligne du tableau. Pour
+     * remplacer la ligne avec les anciennes valeurs par la nouvelle
+     * @param id
+     * @param userEdit
+     * @param model
+     * @return
+     */
+    @PutMapping(value = "/{id}", produces = MediaType.TEXT_HTML_VALUE)
+    public String  updateUser(@PathVariable long id, @ModelAttribute UserDto userEdit, Model model){
+        User userMaj = userRepository.findById(id).orElseThrow();
+        userMaj.setNom(userEdit.getNom());
+        userMaj.setPrenom(userEdit.getPrenom());
+        userRepository.saveAndFlush(userMaj);
+        model.addAttribute("users",userMaj);
+        return  "users ::  row";
+    }
+
+
 
     @DeleteMapping(value = "/{id}")
     String deleteUser(@PathVariable long id, Model model){

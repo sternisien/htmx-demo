@@ -31,16 +31,23 @@
         </tr>
         </thead>
         <tbody id="userTable" th:fragment="user-list">
-        <tr th:each="user : ${users}" th:id="'user-' + ${user.id}">
+        <tr th:each="user : ${users}" th:id="'user-' + ${user.id}" th:fragment="row">
             <td th:text="${user.id}"></td>
             <td th:text="${user.nom}"></td>
             <td th:text="${user.prenom}"></td>
             <td>
                 <button th:attr="hx-delete=@{/users/{id}(id=${user.id})}" hx-swap="outerHTML" hx-target="#userTable">DELETE</button>
             </td>
+            <td>
+                <button th:attr="hx-get=@{/users/{id}/edit(id=${user.id})}" hx-target="#editUser" hx-swap="innerHTML">Edit</button>
+            </td>
         </tr>
         </tbody>
     </table>
+</div>
+
+<div id="editUser">
+
 </div>
 
 
